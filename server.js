@@ -13,8 +13,8 @@ app.post("/webhook/github", express.raw({ type: "*/*" }), async (req, res) => {
         if (!sigHeader) return res.status(401).send("Missing signature header");
         const expected = crypto.createHmac("sha256", secret).update(req.body).digest("hex");
         const ok = crypto.timingSafeEqual(
-            Buffer.from(sigHeader),
-            Buffer.from(expected),
+            Buffer.from(sigHeader, "utf8"),
+            Buffer.from(expected, "utf8"),
         );
         if (!ok) return res.status(401).send("Invalid signature");
         // Parse JSON payload after signature verification
